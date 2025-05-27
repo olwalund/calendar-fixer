@@ -1,5 +1,5 @@
 # Lista över kalendrar att hämta och korrigera
-- name: job1
-  url: https://outlook.office.com/calendar/ics/your-ics-link-1.ics
+- name: olof
+  url: https://outlook.office365.com/owa/calendar/fcf063eccc4a4db08b6235f09ad37ea2@lund.se/e8ed58565cdb446894b4ea82f0993cdf5762124384846736173/calendar.ics#2
 - name: job2
   url: https://outlook.office.com/calendar/ics/your-ics-link-2.ics
