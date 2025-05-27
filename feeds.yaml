@@ -1,0 +1,5 @@
+# Lista över kalendrar att hämta och korrigera
+- name: job1
+  url: https://outlook.office.com/calendar/ics/your-ics-link-1.ics
+- name: job2
+  url: https://outlook.office.com/calendar/ics/your-ics-link-2.ics
