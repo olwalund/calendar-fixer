@@ -1,0 +1,21 @@
+name: Uppdatera ICS-filer
+
+on:
+  schedule:
+    - cron: "0 * * * *"  # Kör varje timme
+  workflow_dispatch:     # Möjliggör manuell körning
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Installera beroenden
+        run: pip install pyyaml requests
+      - name: Kör skriptet
+        run: python fix_ics.py
+      - name: Publicera till GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
