@@ -13,8 +13,7 @@ def main():
     output_dir = Path("docs")
     output_dir.mkdir(exist_ok=True)
 
-    for feed in feeds:
-        name = feed["name"]
+    for name, feed in feeds["calendars"].items():
         url = feed["url"]
         print(f"Hämtar {name} från {url}")
         try:
