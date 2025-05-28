@@ -10,12 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Installera beroenden
         run: pip install pyyaml requests
+
       - name: Kör skriptet
         run: python fix_ics.py
+
       - name: Publicera till GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.PAT }}
+          personal_token: ${{ secrets.PAT }}
           publish_dir: ./docs
