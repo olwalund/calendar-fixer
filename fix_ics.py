@@ -1,38 +1,28 @@
 import requests
 import yaml
+from pathlib import Path
 import pytz
 from icalendar import Calendar
-from pathlib import Path
 from datetime import datetime
-from io import StringIO
-
-LOCAL_TZ = pytz.timezone("Europe/Stockholm")
 
 def fix_ics_times(ics_content):
-    cal = Calendar.from_ical(ics_content)
-    new_cal = Calendar()
-
-    for k, v in cal.items():
-        new_cal.add(k, v)
-
-    for component in cal.walk():
-        if component.name == "VEVENT":
-            for time_key in ("DTSTART", "DTEND", "DTSTAMP"):
-                if time_key in component:
-                    dt = component.get(time_key).dt
-                    if isinstance(dt, datetime):
-                        if dt.tzinfo is None:
-                            # Anta att den är UTC, konvertera till lokal tid
-                            dt = pytz.utc.localize(dt).astimezone(LOCAL_TZ)
-                        else:
-                            dt = dt.astimezone(LOCAL_TZ)
-                        component[time_key].dt = dt
-        new_cal.add_component(component)
-
-    return new_cal.to_ical().decode("utf-8")
+    try:
+        cal = Calendar.from_ical(ics_content)
+        for component in cal.walk():
+            if component.name == "VEVENT":
+                dtstart = component.get("DTSTART")
+                dtend = component.get("DTEND")
+                if hasattr(dtstart, "dt") and isinstance(dtstart.dt, datetime) and dtstart.dt.tzinfo is None:
+                    component["DTSTART"].dt = pytz.timezone("Europe/Stockholm").localize(dtstart.dt)
+                if hasattr(dtend, "dt") and isinstance(dtend.dt, datetime) and dtend.dt.tzinfo is None:
+                    component["DTEND"].dt = pytz.timezone("Europe/Stockholm").localize(dtend.dt)
+        return cal.to_ical().decode("utf-8")
+    except Exception as e:
+        print(f"❌ Fel i fix_ics_times: {e}")
+        return ics_content
 
 def main():
-    print("🔄 Startar script...")
+    print("🚀 Startar")
     with open("feeds.yaml", "r") as f:
         feeds = yaml.safe_load(f)
 
@@ -44,6 +34,8 @@ def main():
         print(f"🌐 Hämtar {name} från {url}")
         try:
             r = requests.get(url, timeout=30)
+            print(f"📥 Statuskod: {r.status_code}")
+            print(f"📄 Förhandsvisning: {r.text[:200]}")
             r.raise_for_status()
             fixed = fix_ics_times(r.text)
             output_path = output_dir / f"{name}.ics"
