@@ -1,3 +1,10 @@
+name: Skapa nya ICS-filer
+
+on:
+  schedule:
+    - cron: "0 * * * *"  # Kör varje timme
+  workflow_dispatch:     # Möjliggör manuell körning
+
 jobs:
   build:
     runs-on: ubuntu-latest
