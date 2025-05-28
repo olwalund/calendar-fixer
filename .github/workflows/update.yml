@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Installera Python-paket
-        run: pip install pyyaml requests pytz
+        run: pip install requests pyyaml pytz icalendar
       - name: Kör skriptet
         run: python fix_ics.py
       - name: Publicera till GitHub Pages
